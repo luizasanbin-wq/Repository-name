@@ -3,256 +3,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUPER TETHER | الصفحة الرسمية</title>
+  <title>SUPER TETHER | I KAR</title>
   
-  <!-- استدعاء الخطوط والأيقونات -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --primary-color: #ffd700; /* اللون الذهبي */
-      --bg-dark: #050505;
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 215, 0, 0.3);
+      --gold: #ffd700;
+      --glass-bg: rgba(0, 0, 0, 0.65); /* لون البطاقة */
+      --glass-border: rgba(255, 215, 0, 0.4);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: 'Cairo', sans-serif;
       height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(-45deg, #000000, #1a1a1a, #2c2c2c, #000000);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
       color: #fff;
-      overflow: hidden;
+      perspective: 1000px; /* لعمل تأثير العمق 3D */
     }
 
-    /* خلفية متحركة */
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* 1. الخلفية الثابتة (تظهر فوراً) */
+    .wallpaper {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('bg.jpg') center/cover no-repeat;
+      z-index: -5;
+      /* تأثير تكبير بطيء للخلفية لإعطاء حياة */
+      animation: zoomBg 20s infinite alternate;
+    }
+    @keyframes zoomBg { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+    /* طبقة تعتيم */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: -4;
     }
 
-    .container {
-      text-align: center;
-      background: var(--glass-bg);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid var(--glass-border);
-      padding: 40px 30px;
-      border-radius: 25px;
+    /* 2. شاشة التحميل (Intro) */
+    #loader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    
+    .loader-content img {
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 2px solid var(--gold);
+      margin-bottom: 20px;
+      animation: pulseLogo 2s infinite;
+    }
+    
+    .loading-bar {
+      width: 150px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;
+    }
+    .loading-progress {
+      width: 0%; height: 100%; background: var(--gold);
+      animation: load 2.5s ease-in-out forwards;
+    }
+
+    /* 3. حاوية البطاقة ثلاثية الأبعاد */
+    .card-container {
       width: 90%;
-      max-width: 420px;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-      animation: fadeInUp 1s ease-out;
-    }
-
-    .logo-container {
+      max-width: 400px;
+      height: 550px; /* ارتفاع البطاقة */
       position: relative;
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 20px;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1); /* دوران ناعم وفخم */
+      opacity: 0; /* مخفي حتى ينتهي التحميل */
+      transform: translateY(50px);
     }
 
-    .logo {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 3px solid var(--primary-color);
-      /* ضع رابط صورتك هنا بدلاً من الرابط المؤقت */
-      background: url("https://cdn-icons-png.flaticon.com/512/6001/6001378.png") center/cover no-repeat;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-      position: relative;
-      z-index: 2;
+    /* كلاس الدوران */
+    .card-container.flipped {
+      transform: rotateY(180deg) translateY(0) !important;
     }
 
-    /* تأثير نبض حول اللوجو */
-    .logo-container::after {
-      content: '';
+    /* الوجه الأمامي والخلفي */
+    .face {
       position: absolute;
-      top: -5px; left: -5px; right: -5px; bottom: -5px;
-      border-radius: 50%;
-      border: 2px solid var(--primary-color);
-      animation: pulse 2s infinite;
-      opacity: 0;
-      z-index: 1;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    .name {
-      color: var(--primary-color);
-      margin-bottom: 30px;
-      font-size: 14px;
-      opacity: 0.9;
-      font-weight: bold;
-    }
-
-    .btn-group {
+      width: 100%; height: 100%;
+      backface-visibility: hidden; /* إخفاء الظهر */
+      border-radius: 25px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
-      gap: 15px;
-    }
-
-    .btn {
-      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 15px;
-      border-radius: 50px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--primary-color);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      padding: 20px;
     }
 
-    .btn i {
-      margin-left: 10px;
-      font-size: 20px;
+    /* الوجه الخلفي (الروابط) يجب أن يكون مقلوباً مسبقاً */
+    .face.back {
+      transform: rotateY(180deg);
+    }
+
+    /* تصميم المحتوى */
+    .logo {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: url('logo.png') center/cover;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      margin-bottom: 15px;
+    }
+
+    h1 { color: #fff; font-size: 24px; margin-bottom: 5px; }
+    h2 { color: var(--gold); font-size: 14px; margin-bottom: 30px; letter-spacing: 1px; }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: 0.3s;
+      cursor: pointer;
     }
 
     .btn:hover {
-      background: var(--primary-color);
+      background: var(--gold);
       color: #000;
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+      border-color: var(--gold);
+      transform: scale(1.02);
     }
 
-    /* زر الموسيقى */
-    .music-wrapper {
-      position: fixed;
-      bottom: 25px;
-      left: 25px;
-      z-index: 100;
+    /* زر العودة */
+    .back-arrow {
+      margin-top: 20px;
+      background: transparent; border: none; color: #bbb;
+      font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px;
     }
+    .back-arrow:hover { color: var(--gold); }
 
-    .music-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      background: var(--primary-color);
-      color: #000;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* الأنيميشن */
+    @keyframes load { 0% {width: 0;} 100% {width: 100%;} }
+    @keyframes pulseLogo { 0% {transform: scale(1);} 50% {transform: scale(1.05); box-shadow: 0 0 30px var(--gold);} 100% {transform: scale(1);} }
+    @keyframes entryCard { to { opacity: 1; transform: translateY(0); } }
 
-    .music-btn.playing {
-      animation: spin 3s linear infinite;
-    }
-
-    /* الحركات */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(1.2); opacity: 0; }
-    }
-
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
-    /* تحسين للموبايل */
-    @media (max-width: 480px) {
-      .container { width: 85%; padding: 30px 20px; }
-      h1 { font-size: 20px; }
-    }
   </style>
 </head>
-
 <body>
 
-  <div class="container">
-    <div class="logo-container">
-      <!-- استبدل الرابط أدناه برابط اللوجو الخاص بك -->
-      <div class="logo" style="background-image: url('logo.png');"></div>
-    </div>
+  <!-- الخلفية -->
+  <div class="wallpaper"></div>
+  <div class="overlay"></div>
 
-    <h1>SUPER TETHER</h1>
-    <div class="name">ᯓ𓆩𖡡𓏺.𐏓َِ𝗞َِ𝗜⁠𝗡َِ𝗚⁠.𓏺𖡡𓆪</div>
-
-    <div class="btn-group">
-      <!-- زر التليجرام -->
-      <a class="btn" href="https://t.me/T_V9RN" target="_blank">
-        <i class="fa-brands fa-telegram"></i> اشترك في القناة
-      </a>
-      
-      <!-- زر الواتساب -->
-      <a class="btn" href="https://wa.me/XXXXXXXXXX" target="_blank">
-        <i class="fa-brands fa-whatsapp"></i> تواصل واتساب
-      </a>
-      
-      <!-- زر البوت -->
-      <a class="btn" href="https://t.me/NFJEKJEJEJBOT" target="_blank">
-        <i class="fa-solid fa-robot"></i> بوت الاشتراك
-      </a>
+  <!-- شاشة التحميل -->
+  <div id="loader">
+    <div class="loader-content">
+      <img src="logo.png" alt="Loading">
     </div>
+    <div class="loading-bar"><div class="loading-progress"></div></div>
+    <p style="margin-top: 10px; color: #888; font-size: 12px;">جاري تجهيز الواجهة...</p>
   </div>
 
-  <!-- الملف الصوتي -->
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-    متصفحك لا يدعم تشغيل الصوت.
-  </audio>
+  <!-- الأصوات -->
+  <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
+  <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <div class="music-wrapper">
-    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-      <i class="fa-solid fa-play" id="musicIcon"></i>
-    </button>
+  <!-- البطاقة الدوارة -->
+  <div class="card-container" id="mainCard">
+    
+    <!-- الوجه الأمامي (الرئيسية) -->
+    <div class="face front">
+      <div class="logo"></div>
+      <h1>I KAR | إيكـار</h1>
+      <h2>SUPER TETHER GROUP</h2>
+      
+      <button class="btn" onclick="flipCard()">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
+      </button>
+      
+      <a href="https://wa.me/XXXXXXXX" class="btn" target="_blank" onclick="playSound()">
+        <i class="fa-brands fa-whatsapp"></i> تواصل مع إيكار
+      </a>
+    </div>
+
+    <!-- الوجه الخلفي (الروابط) -->
+    <div class="face back">
+      <div class="logo" style="width: 80px; height: 80px; margin-bottom: 20px;"></div>
+      <h2 style="color: #fff; margin-bottom: 20px;">الروابط الرسمية</h2>
+      
+      <a href="https://t.me/CHANNEL" class="btn" target="_blank" onclick="playSound()">
+        <i class="fa-brands fa-telegram"></i> القناة الرسمية
+      </a>
+      <a href="https://t.me/GROUP" class="btn" target="_blank" onclick="playSound()">
+        <i class="fa-solid fa-users"></i> قروب المناقشة
+      </a>
+      <a href="https://t.me/BOT" class="btn" target="_blank" onclick="playSound()">
+        <i class="fa-solid fa-robot"></i> بوت الاشتراك
+      </a>
+
+      <button class="back-arrow" onclick="flipCard()">
+        <i class="fa-solid fa-rotate-left"></i> رجوع للقائمة
+      </button>
+    </div>
+
   </div>
 
   <script>
-    const music = document.getElementById("bgMusic");
-    const btn = document.getElementById("musicBtn");
-    const icon = document.getElementById("musicIcon");
-    let isPlaying = false;
+    const card = document.getElementById('mainCard');
+    const music = document.getElementById('bgMusic');
+    const clickFx = document.getElementById('clickSound');
+    const loader = document.getElementById('loader');
+    let musicStarted = false;
 
-    function toggleMusic() {
-      if (isPlaying) {
-        music.pause();
-        btn.classList.remove("playing");
-        icon.classList.remove("fa-pause");
-        icon.classList.add("fa-play");
-      } else {
-        music.play();
-        btn.classList.add("playing");
-        icon.classList.remove("fa-play");
-        icon.classList.add("fa-pause");
+    // 1. إخفاء شاشة التحميل بعد 2.5 ثانية
+    window.onload = function() {
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        // دخول البطاقة بشكل جميل
+        card.style.animation = "entryCard 1s cubic-bezier(0.5, 0, 0, 1) forwards";
+      }, 2500);
+    };
+
+    function playSound() {
+      clickFx.currentTime = 0;
+      clickFx.play();
+    }
+
+    // دالة الدوران وتشغيل الموسيقى
+    function flipCard() {
+      playSound();
+      
+      // تشغيل الموسيقى عند أول تفاعل
+      if (!musicStarted) {
+        music.play().catch(e => console.log("Audio block"));
+        musicStarted = true;
       }
-      isPlaying = !isPlaying;
+
+      // إضافة أو إزالة كلاس الدوران
+      card.classList.toggle('flipped');
     }
   </script>
 
