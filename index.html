@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="google" content="notranslate"> <!-- لمنع الترجمة التلقائية -->
-  <title>KING | I NZA</title>
+  <meta name="google" content="notranslate">
+  <title>متجر القياده | KING</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,19 +27,18 @@
       justify-content: center;
       align-items: center;
       color: #fff;
-      perspective: 1000px;
       background: #000;
+      perspective: 1000px;
     }
 
-    /* 1. فيديو الخلفية */
+    /* فيديو الخلفية */
     #video-bg {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: -10;
+      object-fit: cover; z-index: -10;
     }
 
-    /* طبقة المطر */
+    /* المطر */
     #rain-container {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: -9; pointer-events: none;
@@ -51,19 +50,16 @@
     }
     @keyframes fall { to { bottom: -20px; } }
 
-    /* طبقة التعتيم */
+    /* التعتيم */
     .overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(1px);
-      z-index: -8;
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(1px); z-index: -8;
     }
 
-    /* 2. شاشة التحميل (شفافة) */
+    /* شاشة التحميل */
     #loader {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8); /* شبه شفاف لرؤية الفيديو خلفه */
-      z-index: 9999;
+      background: rgba(0, 0, 0, 0.9); z-index: 9999;
       display: flex; justify-content: center; align-items: center; flex-direction: column;
       transition: opacity 1s ease, visibility 1s ease;
       backdrop-filter: blur(10px);
@@ -75,7 +71,7 @@
     }
     @keyframes spinLoad { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
-    /* 3. البطاقة */
+    /* البطاقة */
     .card-container {
       width: 90%; max-width: 400px; height: 580px;
       position: relative; transform-style: preserve-3d;
@@ -93,7 +89,7 @@
     }
     .face.back { transform: rotateY(180deg); }
 
-    /* اللوجو */
+    /* اللوجو والنصوص */
     .logo {
       width: 130px; height: 130px; border-radius: 50%;
       background: url('logo.png') center/cover;
@@ -107,7 +103,7 @@
     h1 { font-size: 26px; margin-bottom: 5px; text-shadow: 0 2px 10px #000; }
     h2 { color: var(--gold); font-size: 14px; margin-bottom: 35px; letter-spacing: 1px; }
 
-    /* 4. الأزرار الفخمة (تحرك ولمعان) */
+    /* الأزرار */
     .btn {
       position: relative;
       width: 100%; padding: 16px; margin: 10px 0; border-radius: 50px;
@@ -117,74 +113,53 @@
       display: flex; align-items: center; justify-content: center; gap: 10px;
       transition: 0.4s; cursor: pointer; overflow: hidden;
     }
-    
-    /* لمعة الزر */
     .btn::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%;
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
       transition: 0.5s;
     }
     .btn:hover::before { left: 100%; }
-
     .btn:hover {
-      border-color: var(--gold);
-      box-shadow: 0 0 20px var(--gold-glow);
-      transform: scale(1.02);
-      color: var(--gold);
+      border-color: var(--gold); box-shadow: 0 0 20px var(--gold-glow);
+      transform: scale(1.02); color: var(--gold);
     }
-    
     .btn i { font-size: 20px; }
 
-    /* 5. زر التحكم بالموسيقى */
+    /* زر الموسيقى */
     .music-control {
       position: fixed; bottom: 20px; left: 20px;
       width: 50px; height: 50px; border-radius: 50%;
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid var(--gold);
-      color: var(--gold);
-      font-size: 20px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 100;
-      box-shadow: 0 0 15px var(--gold-glow);
-      transition: 0.3s;
+      background: rgba(0, 0, 0, 0.6); border: 2px solid var(--gold);
+      color: var(--gold); font-size: 20px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 100; box-shadow: 0 0 15px var(--gold-glow); transition: 0.3s;
     }
-    .music-control:active { transform: scale(0.9); }
     .music-play-anim { animation: pulseMusic 2s infinite; }
-    @keyframes pulseMusic { 0% {box-shadow: 0 0 10px var(--gold);} 50% {box-shadow: 0 0 25px var(--gold);} 100% {box-shadow: 0 0 10px var(--gold);} }
+    @keyframes pulseMusic { 0%, 100% {box-shadow: 0 0 10px var(--gold);} 50% {box-shadow: 0 0 25px var(--gold);} }
 
-    /* دخول البطاقة */
     @keyframes entryCard { to { opacity: 1; transform: translateY(0); } }
-
   </style>
 </head>
 <body>
 
-  <!-- فيديو الخلفية -->
-  <!-- muted ضروري عشان يشتغل تلقائي كخلفية، الموسيقى تشتغل من ملف صوتي منفصل -->
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
   </video>
 
-  <!-- طبقة المطر -->
   <div id="rain-container"></div>
   <div class="overlay"></div>
 
-  <!-- شاشة التحميل -->
   <div id="loader">
     <div class="loader-content"><img src="logo.png" alt="Loading"></div>
-    <p style="color: #fff; font-size: 14px;">جارِ الدخول...</p>
+    <p style="color: #fff; font-size: 14px;">جاري تجهيز الفخامة...</p>
   </div>
 
-  <!-- الأصوات -->
   <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
   <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <!-- زر التحكم بالموسيقى -->
   <button class="music-control" onclick="toggleMusic()">
     <i class="fa-solid fa-play" id="musicIcon"></i>
   </button>
 
-  <!-- البطاقة -->
   <div class="card-container" id="mainCard">
     
     <!-- الوجه الأمامي -->
@@ -193,31 +168,36 @@
       <h1>I NZR | كنج</h1>
       <h2>KING</h2>
       
+      <!-- زر التحويل (يشغل الموسيقى ويقلب الصفحة) -->
       <button class="btn" onclick="flipCard()">
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- هام: استبدل USERNAME بيوزر حسابك في تليجرام (بدون @) -->
-      <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
+      <!-- رابط التليجرام الخاص -->
+      <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="generalClick()">
         <i class="fa-brands fa-telegram"></i> تواصل تليجرام
       </a>
+    </div>
 
     <!-- الوجه الخلفي -->
     <div class="face back">
       <div class="logo" style="width: 80px; height: 80px; margin-bottom: 20px;"></div>
       <h2 style="color: #fff; margin-bottom: 20px;">الروابط الرسمية</h2>
       
-      <!-- هام: استبدل الروابط -->
-      <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="playSound()">
+      <!-- القناة -->
+      <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="generalClick()">
         <i class="fa-brands fa-telegram"></i> القناة الرسمية
       </a>
-      <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="playSound()">
+      <!-- القروب -->
+      <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="generalClick()">
         <i class="fa-solid fa-users"></i> قروب المناقشة
       </a>
-      <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="playSound()">
+      <!-- البوت -->
+      <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="generalClick()">
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
 
+      <!-- زر الرجوع -->
       <button class="btn" style="margin-top: 20px; background: transparent; border: none;" onclick="flipCard()">
         <i class="fa-solid fa-rotate-left"></i> رجوع
       </button>
@@ -232,57 +212,73 @@
     const loader = document.getElementById('loader');
     const musicBtn = document.querySelector('.music-control');
     const musicIcon = document.getElementById('musicIcon');
+    let musicStarted = false;
     let isPlaying = false;
 
-    // إخفاء التحميل
     window.onload = function() {
       setTimeout(() => {
         loader.style.opacity = '0';
         loader.style.visibility = 'hidden';
         card.style.animation = "entryCard 1s cubic-bezier(0.5, 0, 0, 1) forwards";
-        // إنشاء المطر
         createRain();
       }, 2000);
     };
 
-    function playSound() {
-      clickFx.currentTime = 0;
-      clickFx.play();
+    // الدالة الشاملة للنقر (صوت + بداية الموسيقى)
+    function generalClick() {
+      // تشغيل صوت التكة
+      if(clickFx) {
+        clickFx.currentTime = 0;
+        clickFx.play();
+      }
+      
+      // تشغيل الموسيقى لأول مرة
+      if (!musicStarted) {
+        music.play().then(() => {
+          musicStarted = true;
+          isPlaying = true;
+          musicBtn.classList.add('music-play-anim');
+          musicIcon.classList.remove('fa-play');
+          musicIcon.classList.add('fa-pause');
+        }).catch(e => console.log("Auto-play prevented"));
+      }
     }
 
-    // دوران البطاقة
+    // دالة الدوران
     function flipCard() {
-      playSound();
+      generalClick(); // استدعاء الدالة الشاملة
       card.classList.toggle('flipped');
     }
 
-    // التحكم بالموسيقى
+    // زر التحكم بالموسيقى
     function toggleMusic() {
+      generalClick(); // محاولة تشغيل الصوت عند الضغط
       if (isPlaying) {
         music.pause();
         musicIcon.classList.remove('fa-pause');
         musicIcon.classList.add('fa-play');
         musicBtn.classList.remove('music-play-anim');
+        isPlaying = false;
       } else {
         music.play();
         musicIcon.classList.remove('fa-play');
         musicIcon.classList.add('fa-pause');
         musicBtn.classList.add('music-play-anim');
+        isPlaying = true;
       }
-      isPlaying = !isPlaying;
     }
 
-    // تأثير المطر بالكود
+    // رسم المطر
     function createRain() {
       const rainContainer = document.getElementById('rain-container');
-      const amount = 50; // عدد القطرات
-      for (let i = 0; i < amount; i++) {
-        const drop = document.createElement('div');
-        drop.classList.add('drop');
-        drop.style.left = Math.random() * 100 + '%';
-        drop.style.animationDuration = Math.random() * 1 + 0.5 + 's'; // سرعة عشوائية
-        drop.style.opacity = Math.random();
-        rainContainer.appendChild(drop);
+      if(rainContainer) {
+        for (let i = 0; i < 50; i++) {
+          const drop = document.createElement('div');
+          drop.classList.add('drop');
+          drop.style.left = Math.random() * 100 + '%';
+          drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+          rainContainer.appendChild(drop);
+        }
       }
     }
   </script>
