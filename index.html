@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google" content="notranslate">
-  <title>متجر القياده | KING</title>
+  <title>SUPER TETHER | KING</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,8 +12,7 @@
   <style>
     :root {
       --gold: #ffd700;
-      --gold-glow: rgba(255, 215, 0, 0.6);
-      --glass-bg: rgba(0, 0, 0, 0.75);
+      --glass-bg: rgba(0, 0, 0, 0.60); /* تخفيف الشفافية للسرعة */
       --glass-border: rgba(255, 215, 0, 0.3);
     }
 
@@ -26,182 +25,150 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
       background: #000;
       perspective: 1000px;
     }
 
-    /* فيديو الخلفية */
+    /* فيديو الخلفية - يظهر فوراً */
     #video-bg {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       object-fit: cover; z-index: -10;
+      background: #000; /* لون احتياطي حتى يشتغل الفيديو */
     }
 
-    /* المطر */
-    #rain-container {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -9; pointer-events: none;
-    }
-    .drop {
-      position: absolute; bottom: 100%; width: 2px; height: 15px;
-      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5));
-      animation: fall linear infinite;
-    }
-    @keyframes fall { to { bottom: -20px; } }
-
-    /* التعتيم */
+    /* تعتيم خفيف جداً للقراءة */
     .overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(1px); z-index: -8;
+      background: rgba(0, 0, 0, 0.3); z-index: -9;
     }
 
-    /* شاشة التحميل */
-    #loader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9); z-index: 9999;
-      display: flex; justify-content: center; align-items: center; flex-direction: column;
-      transition: opacity 1s ease, visibility 1s ease;
-      backdrop-filter: blur(10px);
-    }
-    .loader-content img {
-      width: 90px; height: 90px; border-radius: 50%;
-      border: 2px solid var(--gold); margin-bottom: 20px;
-      animation: spinLoad 2s linear infinite;
-    }
-    @keyframes spinLoad { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
-
-    /* البطاقة */
+    /* حاوية البطاقة - إصلاح السرعة */
     .card-container {
-      width: 90%; max-width: 400px; height: 580px;
-      position: relative; transform-style: preserve-3d;
-      transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
-      opacity: 0; transform: translateY(50px);
+      width: 90%; max-width: 400px; height: 600px;
+      position: relative; 
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* تسريع الحركة */
+      will-change: transform; /* أمر للجوال باستخدام المعالج القوي */
     }
-    .card-container.flipped { transform: rotateY(180deg); }
 
+    .card-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* وجه البطاقة */
     .face {
       position: absolute; width: 100%; height: 100%;
-      backface-visibility: hidden; border-radius: 30px;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      box-shadow: 0 0 50px rgba(0,0,0,0.8);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px;
+      backface-visibility: hidden; /* ضروري لإخفاء الظهر */
+      -webkit-backface-visibility: hidden; /* للآيفون */
+      border-radius: 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
-    .face.back { transform: rotateY(180deg); }
 
-    /* اللوجو والنصوص */
+    /* الوجه الخلفي */
+    .face.back {
+      transform: rotateY(180deg);
+    }
+
+    /* اللوجو */
     .logo {
-      width: 130px; height: 130px; border-radius: 50%;
+      width: 120px; height: 120px; border-radius: 50%;
       background: url('logo.png') center/cover;
       border: 3px solid var(--gold);
-      box-shadow: 0 0 30px var(--gold-glow);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
       margin-bottom: 20px;
-      animation: floatLogo 4s ease-in-out infinite;
     }
-    @keyframes floatLogo { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-10px);} }
 
-    h1 { font-size: 26px; margin-bottom: 5px; text-shadow: 0 2px 10px #000; }
-    h2 { color: var(--gold); font-size: 14px; margin-bottom: 35px; letter-spacing: 1px; }
+    h1 { font-size: 24px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 5px #000; }
+    h2 { font-size: 14px; color: var(--gold); margin-bottom: 30px; letter-spacing: 1px; }
 
-    /* الأزرار */
+    /* الأزرار - خفيفة وسريعة */
     .btn {
-      position: relative;
-      width: 100%; padding: 16px; margin: 10px 0; border-radius: 50px;
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(50,50,50,0.6));
+      width: 100%; padding: 15px; margin: 8px 0; border-radius: 50px;
+      background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 215, 0, 0.3);
       color: #fff; font-size: 16px; text-decoration: none; font-weight: bold;
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: 0.4s; cursor: pointer; overflow: hidden;
+      cursor: pointer; transition: 0.2s;
     }
-    .btn::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-      transition: 0.5s;
-    }
-    .btn:hover::before { left: 100%; }
-    .btn:hover {
-      border-color: var(--gold); box-shadow: 0 0 20px var(--gold-glow);
-      transform: scale(1.02); color: var(--gold);
-    }
-    .btn i { font-size: 20px; }
+    
+    .btn:active { transform: scale(0.95); background: var(--gold); color: #000; }
+    .btn i { font-size: 18px; }
 
-    /* زر الموسيقى */
-    .music-control {
+    /* زر الموسيقى العائم */
+    .music-btn {
       position: fixed; bottom: 20px; left: 20px;
-      width: 50px; height: 50px; border-radius: 50%;
-      background: rgba(0, 0, 0, 0.6); border: 2px solid var(--gold);
-      color: var(--gold); font-size: 20px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 100; box-shadow: 0 0 15px var(--gold-glow); transition: 0.3s;
+      width: 45px; height: 45px; border-radius: 50%;
+      background: var(--gold); border: none; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; cursor: pointer;
+      box-shadow: 0 0 10px var(--gold);
     }
-    .music-play-anim { animation: pulseMusic 2s infinite; }
-    @keyframes pulseMusic { 0%, 100% {box-shadow: 0 0 10px var(--gold);} 50% {box-shadow: 0 0 25px var(--gold);} }
 
-    @keyframes entryCard { to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
+  <!-- الفيديو يظهر فوراً (بدون شاشة سوداء) -->
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
   </video>
-
-  <div id="rain-container"></div>
+  
   <div class="overlay"></div>
 
-  <div id="loader">
-    <div class="loader-content"><img src="logo.png" alt="Loading"></div>
-    <p style="color: #fff; font-size: 14px;">جاري تجهيز الفخامة...</p>
-  </div>
-
+  <!-- الأصوات -->
   <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
   <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <button class="music-control" onclick="toggleMusic()">
-    <i class="fa-solid fa-play" id="musicIcon"></i>
+  <!-- زر التحكم بالموسيقى -->
+  <button class="music-btn" onclick="toggleMusic()">
+    <i class="fa-solid fa-music"></i>
   </button>
 
+  <!-- البطاقة -->
   <div class="card-container" id="mainCard">
     
-    <!-- الوجه الأمامي -->
+    <!-- === الوجه الأمامي (1) === -->
     <div class="face front">
       <div class="logo"></div>
       <h1>I NZR | كنج</h1>
       <h2>KING</h2>
       
-      <!-- زر التحويل (يشغل الموسيقى ويقلب الصفحة) -->
+      <!-- زر التدوير -->
       <button class="btn" onclick="flipCard()">
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- رابط التليجرام الخاص -->
-      <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="generalClick()">
+      <!-- زر التليجرام الخاص -->
+      <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> تواصل تليجرام
       </a>
-    </div>
+    </div> <!-- تم إغلاق الوجه الأول هنا بشكل صحيح -->
 
-    <!-- الوجه الخلفي -->
+    <!-- === الوجه الخلفي (2) === -->
     <div class="face back">
-      <div class="logo" style="width: 80px; height: 80px; margin-bottom: 20px;"></div>
-      <h2 style="color: #fff; margin-bottom: 20px;">الروابط الرسمية</h2>
+      <div class="logo" style="width: 70px; height: 70px; margin-bottom: 15px;"></div>
+      <h2 style="margin-bottom: 20px;">الروابط الرسمية</h2>
       
       <!-- القناة -->
-      <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="generalClick()">
+      <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> القناة الرسمية
       </a>
       <!-- القروب -->
-      <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="generalClick()">
+      <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-users"></i> قروب المناقشة
       </a>
       <!-- البوت -->
-      <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="generalClick()">
+      <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
 
       <!-- زر الرجوع -->
-      <button class="btn" style="margin-top: 20px; background: transparent; border: none;" onclick="flipCard()">
+      <button class="btn" style="background: transparent; border: none; margin-top: 10px;" onclick="flipCard()">
         <i class="fa-solid fa-rotate-left"></i> رجوع
       </button>
-    </div>
+    </div> <!-- تم إغلاق الوجه الثاني هنا -->
 
   </div>
 
@@ -209,76 +176,34 @@
     const card = document.getElementById('mainCard');
     const music = document.getElementById('bgMusic');
     const clickFx = document.getElementById('clickSound');
-    const loader = document.getElementById('loader');
-    const musicBtn = document.querySelector('.music-control');
-    const musicIcon = document.getElementById('musicIcon');
     let musicStarted = false;
-    let isPlaying = false;
 
-    window.onload = function() {
-      setTimeout(() => {
-        loader.style.opacity = '0';
-        loader.style.visibility = 'hidden';
-        card.style.animation = "entryCard 1s cubic-bezier(0.5, 0, 0, 1) forwards";
-        createRain();
-      }, 2000);
-    };
-
-    // الدالة الشاملة للنقر (صوت + بداية الموسيقى)
-    function generalClick() {
-      // تشغيل صوت التكة
+    // دالة الصوت البسيطة والسريعة
+    function playSound() {
+      // 1. تشغيل صوت التكة
       if(clickFx) {
         clickFx.currentTime = 0;
         clickFx.play();
       }
-      
-      // تشغيل الموسيقى لأول مرة
+      // 2. محاولة تشغيل الموسيقى
       if (!musicStarted) {
-        music.play().then(() => {
-          musicStarted = true;
-          isPlaying = true;
-          musicBtn.classList.add('music-play-anim');
-          musicIcon.classList.remove('fa-play');
-          musicIcon.classList.add('fa-pause');
-        }).catch(e => console.log("Auto-play prevented"));
+        music.play().then(() => { musicStarted = true; }).catch((e) => {});
       }
     }
 
-    // دالة الدوران
+    // دالة التدوير
     function flipCard() {
-      generalClick(); // استدعاء الدالة الشاملة
-      card.classList.toggle('flipped');
+      playSound(); // شغل الصوت
+      card.classList.toggle('flipped'); // اقلب البطاقة
     }
 
-    // زر التحكم بالموسيقى
+    // زر الموسيقى الجانبي
     function toggleMusic() {
-      generalClick(); // محاولة تشغيل الصوت عند الضغط
-      if (isPlaying) {
-        music.pause();
-        musicIcon.classList.remove('fa-pause');
-        musicIcon.classList.add('fa-play');
-        musicBtn.classList.remove('music-play-anim');
-        isPlaying = false;
-      } else {
+      if (music.paused) {
         music.play();
-        musicIcon.classList.remove('fa-play');
-        musicIcon.classList.add('fa-pause');
-        musicBtn.classList.add('music-play-anim');
-        isPlaying = true;
-      }
-    }
-
-    // رسم المطر
-    function createRain() {
-      const rainContainer = document.getElementById('rain-container');
-      if(rainContainer) {
-        for (let i = 0; i < 50; i++) {
-          const drop = document.createElement('div');
-          drop.classList.add('drop');
-          drop.style.left = Math.random() * 100 + '%';
-          drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
-          rainContainer.appendChild(drop);
-        }
+        musicStarted = true;
+      } else {
+        music.pause();
       }
     }
   </script>
