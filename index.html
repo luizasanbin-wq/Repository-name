@@ -97,19 +97,44 @@
       transform: rotateY(180deg);
     }
 
+    /* === ستايل الوجه (معدل لمنع التداخل) === */
     .face {
       position: absolute; width: 100%; height: 100%;
+      -webkit-backface-visibility: hidden; /* ضروري للآيفون */
       backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
       border-radius: 30px;
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+      /* إضافة حركة لترتيب الطبقات */
+      transition: transform 0.8s, z-index 0.8s; 
     }
 
+    /* تحديد الطبقات: الأمامي فوق في البداية */
+    .face.front {
+      transform: rotateY(0deg);
+      z-index: 2;
+    }
+
+    /* الخلفي تحت في البداية */
     .face.back {
       transform: rotateY(180deg);
+      z-index: 1;
     }
+
+    /* === الحل الجذري لمشكلة تليجرام === */
+    
+    /* الحالة 1: البطاقة غير مقلوبة (أنت في الواجهة) */
+    /* الوجه الأمامي: يقبل اللمس */
+    .card-container:not(.flipped) .face.front { pointer-events: auto; }
+    /* الوجه الخلفي: ميت تماماً (لا يمكن ضغطه) */
+    .card-container:not(.flipped) .face.back { pointer-events: none; }
+
+    /* الحالة 2: البطاقة مقلوبة (أنت في الخلف) */
+    /* الوجه الأمامي: يموت ويصبح في الأسفل */
+    .card-container.flipped .face.front { pointer-events: none; z-index: 1; }
+    /* الوجه الخلفي: يقبل اللمس ويصبح في الأعلى */
+    .card-container.flipped .face.back { pointer-events: auto; z-index: 2; }
 
     .logo {
       width: 120px; height: 120px; border-radius: 50%;
@@ -212,45 +237,45 @@
   <!-- البطاقة -->
   <div class="card-container" id="mainCard">
     
-    <!-- === الوجه الأمامي (1) === -->
+    <!-- === الوجه الأمامي (يظهر أولاً) === -->
     <div class="face front">
       <div class="logo"></div>
       <h1>I NZR | كنج</h1>
-      <h2>أهلًا بكم في موقعنا الخاص، حيث نقدم خدمات التواصل الاجتماعي.</h2>
+      <h2>KING</h2>
       
-      <!-- زر 1: يقلب البطاقة ليظهر الروابط -->
-      <button class="btn" onclick="flipCard()">
+      <!-- زر التصفح (يقلب البطاقة) -->
+      <button class="btn" type="button" onclick="flipCard()">
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- زر 2: يفتح حساب المالك مباشرة -->
+      <!-- زر المالك (رابط مباشر) -->
       <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> تواصل (تيلجرام)
       </a>
     </div>
 
-    <!-- === الوجه الخلفي (2) === -->
+    <!-- === الوجه الخلفي (القائمة) === -->
     <div class="face back">
       <div class="logo" style="width: 70px; height: 70px; margin-bottom: 10px;"></div>
       <h2 style="margin-bottom: 15px;">الروابط الرسمية</h2>
       
-      <!-- رابط القناة -->
+      <!-- القناة -->
       <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-bullhorn"></i> القناة الرسمية
       </a>
 
-      <!-- رابط القروب -->
+      <!-- القروب -->
       <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-users"></i> قروب المناقشة
       </a>
 
-      <!-- رابط البوت -->
+      <!-- البوت -->
       <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
 
-      <!-- زر الرجوع: وظيفته فقط قلب البطاقة (بدون رابط) -->
-      <button class="btn" style="background: transparent; border: none; margin-top: 5px;" onclick="flipCard()">
+      <!-- زر الرجوع (زر فقط وليس رابط) -->
+      <button class="btn" type="button" style="background: transparent; border: none; margin-top: 5px;" onclick="flipCard()">
         <i class="fa-solid fa-rotate-left"></i> رجوع
       </button>
     </div>
