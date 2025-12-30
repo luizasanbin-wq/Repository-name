@@ -6,16 +6,15 @@
   <meta name="google" content="notranslate">
   <title>Store KING | الصفحة الرسمية</title>
   
-  <!-- خطوط احترافية -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Russo+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
       --gold: #ffd700;
-      --neon-green: #00ff41; /* لون أخضر نيون مثل الصورة */
-      --dark-green: #006400;
-      --glass-bg: rgba(0, 0, 0, 0.70);
+      --neon-green: #00ff41;
+      --neon-blue: #00b8ff;
+      --glass-bg: rgba(0, 0, 0, 0.85);
       --glass-border: rgba(255, 215, 0, 0.3);
     }
 
@@ -36,7 +35,7 @@
     #video-bg {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: -10;
-      transition: filter 1.5s ease; filter: blur(15px);
+      transition: filter 1s ease; filter: blur(20px);
     }
 
     .overlay {
@@ -44,54 +43,40 @@
       background: rgba(0, 0, 0, 0.5); z-index: -9;
     }
 
-    /* === الاسم الفخم في الأعلى (يمين) === */
+    /* === اسم الموقع (Store KING) === */
     .top-brand {
-      position: fixed;
-      top: 25px;
-      right: 25px;
-      z-index: 500;
-      font-family: 'Russo One', sans-serif; /* خط عريض انجليزي */
-      font-size: 22px;
-      text-transform: uppercase;
-      /* ستايل الأخضر المشع 3D */
+      position: fixed; top: 30px; right: 25px; z-index: 500;
+      font-family: 'Russo One', sans-serif; font-size: 24px; text-transform: uppercase;
       color: #fff;
-      text-shadow: 
-        0 0 5px var(--neon-green),
-        0 0 10px var(--neon-green),
-        0 4px 4px rgba(0,0,0,0.8);
-      -webkit-text-stroke: 1px var(--dark-green);
-      
-      /* حركة الكتابة */
-      overflow: hidden;
-      white-space: nowrap;
-      border-left: 3px solid var(--neon-green); /* مؤشر الكتابة */
-      width: 0;
-      animation: typing 2s steps(20, end) forwards, blink 0.75s step-end infinite;
-      animation-delay: 3.5s; /* يبدأ بعد شاشة التحميل */
-      opacity: 0; /* مخفي في البداية */
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      opacity: 0; transition: opacity 1s;
     }
-    
-    /* عند انتهاء التحميل يظهر */
-    .brand-visible { opacity: 1 !important; }
 
-    @keyframes typing { from { width: 0; } to { width: 140px; } }
-    @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--neon-green); } }
-
-
-    /* === شاشة التحميل === */
+    /* === شاشة التحميل (الموجات) === */
     #loading-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 9999; display: flex; justify-content: center; align-items: center;
-      flex-direction: column; background: rgba(0,0,0,0.6);
-      transition: opacity 0.8s ease, visibility 0.8s ease;
+      background: #000; transition: opacity 1s ease, visibility 1s ease;
     }
-    .neon-ring {
-      position: relative; width: 120px; height: 120px; border-radius: 50%;
-      border: 4px solid transparent; border-top-color: var(--neon-green); border-right-color: #00b8ff;
-      box-shadow: 0 0 20px var(--neon-green); animation: spinRing 0.8s linear infinite;
+
+    /* تصميم الموجات */
+    .wave-loader {
+      position: relative; width: 10px; height: 10px;
+      background: var(--neon-green); border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-green);
     }
-    .loading-text { position: absolute; color: #fff; font-size: 20px; font-weight: bold; font-family: sans-serif; }
-    @keyframes spinRing { 100% {transform: rotate(360deg);} }
+    .wave-loader::before, .wave-loader::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 100%; height: 100%;
+      border-radius: 50%; border: 2px solid var(--neon-green);
+      animation: waveAnim 2s linear infinite;
+    }
+    .wave-loader::after { animation-delay: 1s; border-color: var(--neon-blue); }
+
+    @keyframes waveAnim {
+      0% { width: 10px; height: 10px; opacity: 1; border-width: 5px; }
+      100% { width: 300px; height: 300px; opacity: 0; border-width: 0px; }
+    }
 
     /* === البطاقة === */
     .card-container {
@@ -113,78 +98,100 @@
     .face.back { transform: rotateY(180deg); }
 
     .logo {
-      width: 120px; height: 120px; border-radius: 50%;
+      width: 130px; height: 130px; border-radius: 50%;
       background: url('logo.png') center/cover;
-      border: 3px solid var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      border: 3px solid var(--gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
       margin-bottom: 20px;
     }
 
-    h1 { font-size: 24px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 5px #000; }
-    h2 { font-size: 14px; color: var(--gold); margin-bottom: 30px; letter-spacing: 1px; }
+    h1 { font-size: 26px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 5px #000; }
+    h2 { font-size: 16px; color: var(--gold); margin-bottom: 30px; letter-spacing: 2px; }
 
     .btn {
-      width: 100%; padding: 15px; margin: 8px 0; border-radius: 50px;
-      background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 215, 0, 0.3);
+      width: 100%; padding: 16px; margin: 8px 0; border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3);
       color: #fff; font-size: 16px; text-decoration: none; font-weight: bold;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       cursor: pointer; transition: 0.2s;
     }
     .btn:active { transform: scale(0.95); background: var(--gold); color: #000; }
 
-    /* === الأزرار العائمة (تحت) === */
-    
-    /* زر الموسيقى (يسار) */
-    .music-btn {
-      position: fixed; bottom: 25px; left: 25px;
-      width: 45px; height: 45px; border-radius: 50%;
-      background: var(--gold); border: none; font-size: 18px; color: #000;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100; cursor: pointer; box-shadow: 0 0 15px var(--gold);
+    /* زر الإبلاغ الرسمي (أسفل يمين) */
+    .report-float-btn {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 50px; height: 50px; border-radius: 50%;
+      background: #444; color: #fff; border: 2px solid #666;
+      font-size: 20px; display: flex; align-items: center; justify-content: center;
+      z-index: 100; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
       opacity: 0; transition: opacity 1s;
     }
 
-    /* زر البلاغات والسياسة (يمين) - جديد */
-    .policy-btn {
-      position: fixed; bottom: 25px; right: 25px;
-      width: 45px; height: 45px; border-radius: 50%;
-      background: #333; border: 2px solid #fff; font-size: 18px; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100; cursor: pointer; box-shadow: 0 0 10px rgba(255,255,255,0.3);
-      opacity: 0; transition: opacity 1s;
-    }
-    .policy-btn:active { transform: scale(0.9); }
-
-    /* === نافذة البلاغات المنبثقة === */
+    /* === نافذة البلاغ الرسمية (ستايل جوجل) === */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8); z-index: 2000;
-      display: none; justify-content: center; align-items: center;
-      backdrop-filter: blur(5px);
+      background: rgba(0,0,0,0.6); z-index: 2000;
+      display: none; justify-content: center; align-items: flex-end; /* للجوال تطلع من تحت */
+      backdrop-filter: blur(3px);
     }
-    .modal-box {
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid var(--gold);
-      border-radius: 20px; padding: 25px; width: 85%; max-width: 320px;
-      text-align: center; position: relative;
-      animation: popUp 0.3s ease;
+    
+    .report-modal {
+      background: #fff; /* خلفية بيضاء رسمية */
+      width: 100%; max-width: 500px;
+      border-top-left-radius: 20px; border-top-right-radius: 20px;
+      padding: 0; overflow: hidden;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+      animation: slideUp 0.3s ease-out;
+      color: #333; font-family: sans-serif; text-align: right;
     }
-    .modal-title { color: var(--gold); font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-    .modal-item {
-      display: block; width: 100%; padding: 12px; margin-bottom: 10px;
-      background: #333; color: #fff; border-radius: 10px; text-decoration: none;
-      font-size: 14px; transition: 0.2s;
+
+    @media(min-width: 600px) {
+      .modal-overlay { align-items: center; }
+      .report-modal { border-radius: 15px; }
     }
-    .modal-item:hover { background: #444; }
-    .close-modal {
-      margin-top: 10px; background: transparent; color: #888; border: none; cursor: pointer; font-size: 14px;
+
+    /* الهيدر حق البلاغ */
+    .modal-header {
+      padding: 15px 20px; border-bottom: 1px solid #eee;
+      display: flex; justify-content: space-between; align-items: center;
     }
+    .modal-title { font-weight: bold; font-size: 16px; }
+    .close-icon { font-size: 20px; color: #666; cursor: pointer; }
+
+    /* محتوى البلاغ */
+    .modal-body { padding: 10px 0; min-height: 200px; }
+
+    /* الأزرار داخل القائمة */
+    .list-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 20px; border-bottom: 1px solid #f5f5f5;
+      cursor: pointer; transition: 0.2s; color: #333; text-decoration: none;
+    }
+    .list-item:hover { background: #f9f9f9; }
+    .list-item i { margin-left: 10px; color: #555; }
+    .arrow-icon { color: #ccc; font-size: 14px; }
+
+    /* زر الإرسال */
+    .submit-area { padding: 15px 20px; border-top: 1px solid #eee; text-align: left; }
+    .submit-btn {
+      background: #1a73e8; color: #fff; border: none; padding: 10px 20px;
+      border-radius: 4px; font-weight: bold; cursor: pointer;
+    }
+    .cancel-btn {
+      background: transparent; color: #1a73e8; border: none; padding: 10px 20px;
+      font-weight: bold; cursor: pointer; margin-right: 10px;
+    }
+
+    /* الصفحات داخل المودال */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    @keyframes slideUp { from {transform: translateY(100%);} to {transform: translateY(0);} }
 
   </style>
 </head>
-<body>
+<body onclick="enableSound()"> <!-- تفعيل الصوت عند اللمس -->
 
-  <!-- الاسم في الأعلى يمين -->
-  <div class="top-brand" id="brandText">Store KING</div>
+  <div class="top-brand" id="brandName">Store KING</div>
 
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
@@ -192,10 +199,9 @@
   
   <div class="overlay"></div>
 
-  <!-- التحميل -->
+  <!-- التحميل (الموجات) -->
   <div id="loading-screen">
-    <div class="neon-ring"></div>
-    <div class="loading-text" id="counter">0%</div>
+    <div class="wave-loader"></div>
   </div>
 
   <!-- الأصوات -->
@@ -203,28 +209,72 @@
   <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
   <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <!-- زر الموسيقى (يسار) -->
-  <button class="music-btn" id="mainMusicBtn" onclick="toggleMusic()">
-    <i class="fa-solid fa-music"></i>
+  <!-- زر البلاغ -->
+  <button class="report-float-btn" id="reportBtn" onclick="openReportModal()">
+    <i class="fa-solid fa-triangle-exclamation"></i>
   </button>
 
-  <!-- زر البلاغات (يمين) -->
-  <button class="policy-btn" id="policyBtn" onclick="toggleModal()">
-    <i class="fa-solid fa-shield-halved"></i>
-  </button>
+  <!-- نافذة البلاغ الرسمية -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="report-modal">
+      
+      <!-- الخطوة 1: القائمة الرئيسية -->
+      <div id="step1" class="step active">
+        <div class="modal-header">
+          <div class="close-icon" onclick="closeReportModal()">&times;</div>
+          <div class="modal-title">الإبلاغ عن إساءة الاستخدام</div>
+        </div>
+        <div class="modal-body">
+          <div class="list-item" onclick="goToStep(2)">
+             <span><i class="fa-regular fa-flag"></i> الإبلاغ عن هذا الموقع الإلكتروني بالكامل</span>
+             <i class="fa-solid fa-chevron-left arrow-icon"></i>
+          </div>
+          <div class="list-item" onclick="goToStep(2)">
+             <span><i class="fa-regular fa-image"></i> الإبلاغ عن صورة محددة</span>
+             <i class="fa-solid fa-chevron-left arrow-icon"></i>
+          </div>
+          <div class="list-item" onclick="window.open('https://t.me/O_I_I3', '_blank')">
+             <span><i class="fa-regular fa-envelope"></i> التواصل مع المالك مباشرة</span>
+             <i class="fa-solid fa-up-right-from-square arrow-icon"></i>
+          </div>
+        </div>
+      </div>
 
-  <!-- نافذة البلاغات -->
-  <div class="modal-overlay" id="policyModal">
-    <div class="modal-box">
-      <div class="modal-title">مركز المساعدة</div>
-      <!-- رابط الإبلاغ (استبدل USERNAME بحسابك لاستقبال البلاغات) -->
-      <a href="https://t.me/O_I_I3" class="modal-item" target="_blank">
-        <i class="fa-solid fa-triangle-exclamation"></i> إبلاغ عن مشكلة
-      </a>
-      <a href="#" class="modal-item" onclick="alert('جميع الحقوق محفوظة لـ Store KING \nسياسة الخصوصية: بياناتك آمنة.')">
-        <i class="fa-solid fa-file-contract"></i> سياسة الخصوصية
-      </a>
-      <button class="close-modal" onclick="toggleModal()">إغلاق</button>
+      <!-- الخطوة 2: اختيار السبب -->
+      <div id="step2" class="step">
+        <div class="modal-header">
+          <div class="close-icon" onclick="goToStep(1)"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="modal-title">ما الذي تريد الإبلاغ عنه؟</div>
+        </div>
+        <div class="modal-body">
+          <label class="list-item"><input type="radio" name="reason"> محتوى غير مرغوب فيه أو ضار</label>
+          <label class="list-item"><input type="radio" name="reason"> محتوى جنسي فاضح</label>
+          <label class="list-item"><input type="radio" name="reason"> محتوى عنيف أو خطير</label>
+          <label class="list-item"><input type="radio" name="reason"> التحرش أو التنمر</label>
+          <label class="list-item"><input type="radio" name="reason"> غير ذلك</label>
+        </div>
+        <div class="submit-area">
+          <button class="cancel-btn" onclick="closeReportModal()">إلغاء</button>
+          <button class="submit-btn" onclick="submitReport()">إرسال التقرير</button>
+        </div>
+      </div>
+
+      <!-- الخطوة 3: تم الإرسال -->
+      <div id="step3" class="step">
+        <div class="modal-header">
+          <div class="close-icon" onclick="closeReportModal()">&times;</div>
+          <div class="modal-title">تم الإرسال</div>
+        </div>
+        <div class="modal-body" style="text-align: center; padding: 40px;">
+          <i class="fa-solid fa-circle-check" style="color: green; font-size: 50px; margin-bottom: 20px;"></i>
+          <p style="font-size: 18px; color: #333;">نشكرك على الإبلاغ.</p>
+          <p style="color: #666; font-size: 14px; margin-top: 10px;">سنتحقق من البلاغ ونتخذ الإجراء اللازم.</p>
+        </div>
+        <div class="submit-area" style="text-align: center;">
+          <button class="submit-btn" onclick="closeReportModal()">موافق</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -241,26 +291,22 @@
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- تأكد من صحة الرابط هنا -->
       <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> تواصل تليجرام
       </a>
     </div>
 
-    <!-- الوجه الخلفي -->
+    <!-- الوجه الخلفي (تم إصلاح الإغلاق هنا) -->
     <div class="face back">
       <div class="logo" style="width: 70px; height: 70px; margin-bottom: 15px;"></div>
       <h2 style="margin-bottom: 20px;">الروابط الرسمية</h2>
       
-      <!-- القناة -->
       <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> القناة الرسمية
       </a>
-      <!-- القروب -->
       <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-users"></i> قروب المناقشة
       </a>
-      <!-- البوت -->
       <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
@@ -274,54 +320,64 @@
 
   <script>
     const loader = document.getElementById('loading-screen');
-    const counterText = document.getElementById('counter');
     const video = document.getElementById('video-bg');
     const mainCard = document.getElementById('mainCard');
     const introAudio = document.getElementById('introMusic');
-    const musicBtn = document.getElementById('mainMusicBtn');
-    const policyBtn = document.getElementById('policyBtn');
-    const brandText = document.getElementById('brandText');
+    const bgMusic = document.getElementById('bgMusic');
+    const reportBtn = document.getElementById('reportBtn');
+    const brandName = document.getElementById('brandName');
+
+    let soundEnabled = false;
 
     // === التحميل ===
     window.onload = function() {
-      introAudio.volume = 0.5; 
-      introAudio.play().catch(e => {});
+      // محاولة تشغيل الصوت
+      introAudio.volume = 0.8;
+      introAudio.play().catch(() => { console.log("Sound waiting for interaction"); });
 
-      let count = 0;
-      const interval = setInterval(() => {
-        count++;
-        counterText.innerText = count + "%";
-        if (count === 100) {
-          clearInterval(interval);
-          finishLoading();
-        }
-      }, 30);
+      // الانتظار 4 ثواني للموجات ثم الدخول
+      setTimeout(() => {
+        finishLoading();
+      }, 4000);
     };
 
     function finishLoading() {
       loader.style.opacity = '0';
       loader.style.visibility = 'hidden';
       video.style.filter = "blur(0px)";
-      introAudio.pause();
       
       mainCard.classList.add('show-card');
-      musicBtn.style.opacity = '1';
-      policyBtn.style.opacity = '1';
-      brandText.classList.add('brand-visible'); // تشغيل اسم الموقع
+      reportBtn.style.opacity = '1';
+      brandName.style.opacity = '1';
+      
+      // إيقاف الانترو وتشغيل موسيقى الخلفية
+      setTimeout(() => {
+        introAudio.pause();
+        // محاولة تشغيل موسيقى الخلفية
+        bgMusic.volume = 0.5;
+        bgMusic.play().catch(() => {});
+      }, 1000);
     }
 
-    // === المنطق الأساسي ===
+    // تفعيل الصوت عند أول لمسة (لحل مشكلة الصمت)
+    function enableSound() {
+      if (!soundEnabled) {
+        // إذا كان الانترو ما زال في وقته، شغله
+        if(loader.style.opacity !== '0') {
+             introAudio.play();
+        } else {
+             bgMusic.play();
+        }
+        soundEnabled = true;
+      }
+    }
+
+    // === البطاقة ===
     const card = document.getElementById('mainCard');
-    const music = document.getElementById('bgMusic');
     const clickFx = document.getElementById('clickSound');
-    const modal = document.getElementById('policyModal');
-    let musicStarted = false;
 
     function playSound() {
       if(clickFx) { clickFx.currentTime = 0; clickFx.play(); }
-      if (!musicStarted) {
-        music.play().then(() => { musicStarted = true; }).catch((e) => {});
-      }
     }
 
     function flipCard() {
@@ -329,24 +385,32 @@
       card.classList.toggle('flipped');
     }
 
-    function toggleMusic() {
-      if (music.paused) {
-        music.play();
-        musicStarted = true;
-      } else {
-        music.pause();
-      }
+    // === نظام البلاغات (Steps) ===
+    const reportModal = document.getElementById('reportModal');
+    
+    function openReportModal() {
+      playSound();
+      reportModal.style.display = 'flex';
+      goToStep(1); // ابدأ دائماً من الخطوة 1
     }
 
-    // فتح وإغلاق نافذة البلاغات
-    function toggleModal() {
-      playSound();
-      if (modal.style.display === 'flex') {
-        modal.style.display = 'none';
-      } else {
-        modal.style.display = 'flex';
-      }
+    function closeReportModal() {
+      reportModal.style.display = 'none';
     }
+
+    function goToStep(stepNumber) {
+      // إخفاء كل الخطوات
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      // إظهار الخطوة المطلوبة
+      document.getElementById('step' + stepNumber).classList.add('active');
+    }
+
+    function submitReport() {
+      // محاكاة الإرسال
+      playSound();
+      goToStep(3); // الانتقال لرسالة الشكر
+    }
+
   </script>
 
 </body>
