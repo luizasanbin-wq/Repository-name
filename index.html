@@ -4,11 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google" content="notranslate">
-  <title>SUPER TETHER | KING</title>
+  <title>S T O R E  •  K I N G | KING</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+/* تصميم شاشة المقدمة الفخمة */
+    #intro-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 9999;
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; padding: 20px;
+      transition: opacity 1s ease-in-out; /* اختفاء ناعم */
+    }
+
+    .intro-text {
+      color: var(--gold);
+      font-size: 18px;
+      line-height: 1.8;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      border-left: 2px solid var(--gold); /* مؤشر الكتابة */
+      padding-left: 10px;
+      white-space: pre-wrap; /* للحفاظ على الأسطر */
+    }
+
+    /* كلاس للإخفاء */
+    .fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
   <style>
     :root {
       --gold: #ffd700;
@@ -110,6 +135,11 @@
 </head>
 <body>
 
+<!-- شاشة التحميل -->
+  <div id="intro-screen">
+    <div class="intro-text" id="typing-area"></div>
+  </div>
+
   <!-- الفيديو يظهر فوراً (بدون شاشة سوداء) -->
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
@@ -171,6 +201,35 @@
     </div> <!-- تم إغلاق الوجه الثاني هنا -->
 
   </div>
+
+// === سكربت الكتابة التلقائية ===
+    const textToType = `مرحبًا بكم في موقعنا الرسمي.
+نرجو منكم الانتظار قليلًا حتى يكتمل التحميل،
+حيث ستظهر لكم الصفحة الرسمية للمتجر.
+شكرًا لزيارتكم، ونتمنى لكم تجربة مميزة.`;
+
+    const typeArea = document.getElementById('typing-area');
+    const introScreen = document.getElementById('intro-screen');
+    let i = 0;
+    const speed = 40; // سرعة الكتابة (كلما قل الرقم زادت السرعة)
+
+    function typeWriter() {
+      if (i < textToType.length) {
+        typeArea.innerHTML += textToType.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      } else {
+        // عند الانتهاء انتظر ثانية ثم اخفِ الشاشة
+        setTimeout(() => {
+          introScreen.classList.add('fade-out');
+          // تشغيل الموسيقى تلقائياً إذا أمكن (اختياري)
+          playSound(); 
+        }, 1500);
+      }
+    }
+
+    // بدء الكتابة عند تحميل الصفحة
+    window.addEventListener('load', typeWriter);
 
   <script>
     const card = document.getElementById('mainCard');
