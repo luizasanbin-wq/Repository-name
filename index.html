@@ -202,7 +202,14 @@
 
   </div>
 
-// === سكربت الكتابة التلقائية ===
+<script>
+    // === 1. تعريف المتغيرات والعناصر ===
+    const card = document.getElementById('mainCard');
+    const music = document.getElementById('bgMusic');
+    const clickFx = document.getElementById('clickSound');
+    let musicStarted = false;
+
+    // === 2. إعدادات شاشة المقدمة (الكتابة) ===
     const textToType = `مرحبًا بكم في موقعنا الرسمي.
 نرجو منكم الانتظار قليلًا حتى يكتمل التحميل،
 حيث ستظهر لكم الصفحة الرسمية للمتجر.
@@ -211,52 +218,46 @@
     const typeArea = document.getElementById('typing-area');
     const introScreen = document.getElementById('intro-screen');
     let i = 0;
-    const speed = 40; // سرعة الكتابة (كلما قل الرقم زادت السرعة)
+    const speed = 40; // سرعة الكتابة
 
-    function typeWriter() {
-      if (i < textToType.length) {
-        typeArea.innerHTML += textToType.charAt(i);
-        i++;
-        setTimeout(typeWriter, speed);
-      } else {
-        // عند الانتهاء انتظر ثانية ثم اخفِ الشاشة
-        setTimeout(() => {
-          introScreen.classList.add('fade-out');
-          // تشغيل الموسيقى تلقائياً إذا أمكن (اختياري)
-          playSound(); 
-        }, 1500);
-      }
-    }
-
-    // بدء الكتابة عند تحميل الصفحة
-    window.addEventListener('load', typeWriter);
-
-  <script>
-    const card = document.getElementById('mainCard');
-    const music = document.getElementById('bgMusic');
-    const clickFx = document.getElementById('clickSound');
-    let musicStarted = false;
-
-    // دالة الصوت البسيطة والسريعة
+    // === 3. دالة تشغيل الصوت ===
     function playSound() {
-      // 1. تشغيل صوت التكة
+      // تشغيل تكة الزر
       if(clickFx) {
         clickFx.currentTime = 0;
         clickFx.play();
       }
-      // 2. محاولة تشغيل الموسيقى
+      // تشغيل الموسيقى الخلفية
       if (!musicStarted) {
         music.play().then(() => { musicStarted = true; }).catch((e) => {});
       }
     }
 
-    // دالة التدوير
-    function flipCard() {
-      playSound(); // شغل الصوت
-      card.classList.toggle('flipped'); // اقلب البطاقة
+    // === 4. دالة الكتابة التلقائية ===
+    function typeWriter() {
+      // تأكد أن العنصر موجود لتجنب الأخطاء
+      if (!typeArea) return;
+
+      if (i < textToType.length) {
+        // إضافة الحرف التالي
+        typeArea.innerHTML += textToType.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      } else {
+        // عند الانتهاء انتظر ثانية ونصف ثم اخفِ الشاشة
+        setTimeout(() => {
+          if(introScreen) introScreen.classList.add('fade-out');
+          playSound(); // تشغيل الموسيقى تلقائياً عند ظهور الموقع
+        }, 1500);
+      }
     }
 
-    // زر الموسيقى الجانبي
+    // === 5. دوال البطاقة والموقع ===
+    function flipCard() {
+      playSound(); 
+      card.classList.toggle('flipped'); 
+    }
+
     function toggleMusic() {
       if (music.paused) {
         music.play();
@@ -265,6 +266,9 @@
         music.pause();
       }
     }
+
+    // === 6. بدء التشغيل عند التحميل ===
+    window.addEventListener('load', typeWriter);
   </script>
 
 </body>
