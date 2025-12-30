@@ -29,62 +29,52 @@
       perspective: 1000px;
     }
 
+    /* === ستايل شبكة الذهب (الخلفية التفاعلية) === */
+    #gold-particles {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -8; /* فوق الفيديو وتحت البطاقة */
+      pointer-events: none; 
+      mix-blend-mode: screen; /* دمج ضوئي */
+    }
+
     /* === ستايل الاسم في الأعلى يميناً === */
     .top-header {
-      position: fixed;
-      top: 25px;
-      right: 25px;
-      font-size: 16px;
-      font-weight: 900;
-      color: var(--gold);
-      letter-spacing: 2px;
-      z-index: 2000;
+      position: fixed; top: 25px; right: 25px;
+      font-size: 16px; font-weight: 900; color: var(--gold);
+      letter-spacing: 2px; z-index: 2000;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
       pointer-events: none;
     }
 
-    /* === ستايل شاشة المقدمة (شفاف وفخم) === */
+    /* === ستايل شاشة المقدمة === */
     #intro-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      /* لون أسود شفاف بنسبة 80% لرؤية الفيديو خلفه */
-      background: rgba(0, 0, 0, 0.8); 
-      /* تأثير تغبيش خفيف (Blur) يعطي فخامة للزجاج */
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px); /* لدعم الآيفون */
+      background: rgba(0, 0, 0, 0.85); 
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       z-index: 9999;
       display: flex; justify-content: center; align-items: center;
       text-align: center; padding: 20px;
       transition: opacity 1s ease-in-out;
     }
     .intro-text {
-      color: var(--gold);
-      font-size: 18px;
-      line-height: 1.8;
-      font-weight: bold;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-      border-left: 2px solid var(--gold); /* مؤشر الكتابة */
-      padding-left: 10px;
+      color: var(--gold); font-size: 18px; line-height: 1.8;
+      font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      border-left: 2px solid var(--gold); padding-left: 10px;
       white-space: pre-wrap;
     }
+    .fade-out { opacity: 0; pointer-events: none; }
 
-    .fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* === ستايلات الخلفية والبطاقة === */
+    /* === الخلفيات === */
     #video-bg {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; z-index: -10;
-      background: #000;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -10; background: #000;
     }
-
     .overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.3); z-index: -9;
     }
 
+    /* === البطاقة والحركة === */
     .card-container {
       width: 90%; max-width: 400px; height: 600px;
       position: relative; 
@@ -92,48 +82,23 @@
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       will-change: transform;
     }
+    .card-container.flipped { transform: rotateY(180deg); }
 
-    .card-container.flipped {
-      transform: rotateY(180deg);
-    }
-
-    /* === ستايل الوجه (معدل لمنع التداخل) === */
     .face {
       position: absolute; width: 100%; height: 100%;
-      -webkit-backface-visibility: hidden; /* ضروري للآيفون */
-      backface-visibility: hidden;
-      border-radius: 30px;
-      background: var(--glass-bg);
+      -webkit-backface-visibility: hidden; backface-visibility: hidden;
+      border-radius: 30px; background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-      /* إضافة حركة لترتيب الطبقات */
       transition: transform 0.8s, z-index 0.8s; 
     }
+    .face.front { transform: rotateY(0deg); z-index: 2; }
+    .face.back { transform: rotateY(180deg); z-index: 1; }
 
-    /* تحديد الطبقات: الأمامي فوق في البداية */
-    .face.front {
-      transform: rotateY(0deg);
-      z-index: 2;
-    }
-
-    /* الخلفي تحت في البداية */
-    .face.back {
-      transform: rotateY(180deg);
-      z-index: 1;
-    }
-
-    /* === الحل الجذري لمشكلة تليجرام === */
-    
-    /* الحالة 1: البطاقة غير مقلوبة (أنت في الواجهة) */
-    /* الوجه الأمامي: يقبل اللمس */
+    /* === حل مشكلة اللمس في تليجرام === */
     .card-container:not(.flipped) .face.front { pointer-events: auto; }
-    /* الوجه الخلفي: ميت تماماً (لا يمكن ضغطه) */
     .card-container:not(.flipped) .face.back { pointer-events: none; }
-
-    /* الحالة 2: البطاقة مقلوبة (أنت في الخلف) */
-    /* الوجه الأمامي: يموت ويصبح في الأسفل */
     .card-container.flipped .face.front { pointer-events: none; z-index: 1; }
-    /* الوجه الخلفي: يقبل اللمس ويصبح في الأعلى */
     .card-container.flipped .face.back { pointer-events: auto; z-index: 2; }
 
     .logo {
@@ -147,134 +112,139 @@
     h1 { font-size: 24px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 5px #000; }
     h2 { font-size: 14px; color: var(--gold); margin-bottom: 30px; letter-spacing: 1px; }
 
-    /* === ستايل الأزرار الجديد (قوس قزح الدوار) === */
+    /* === الأزرار الدوارة (قوس قزح) === */
     @keyframes rotate-rainbow {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
-
     .btn {
-      position: relative;
-      width: 100%; padding: 15px; margin: 10px 0;
-      border-radius: 50px;
-      color: #fff; font-size: 16px; font-weight: bold; text-decoration: none;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      cursor: pointer; 
-      border: none;
-      background: transparent;
-      overflow: hidden;
-      z-index: 1;
+      position: relative; width: 100%; padding: 15px; margin: 8px 0;
+      border-radius: 50px; color: #fff; font-size: 16px; font-weight: bold;
+      text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer; border: none; background: transparent; overflow: hidden; z-index: 1;
       transition: transform 0.2s;
     }
-
-    /* طبقة الألوان الدوارة */
     .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 300%; height: 300%;
-      background: conic-gradient(
-        #ff0000, #ff7300, #fffb00, #48ff00, 
-        #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000
-      );
-      transform: translate(-50%, -50%);
-      animation: rotate-rainbow 3s linear infinite;
-      z-index: -2;
+      content: ''; position: absolute; top: 50%; left: 50%; width: 300%; height: 300%;
+      background: conic-gradient(#ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      transform: translate(-50%, -50%); animation: rotate-rainbow 3s linear infinite; z-index: -2;
     }
-
-    /* الطبقة السوداء الداخلية */
     .btn::after {
-      content: '';
-      position: absolute;
-      inset: 2px; /* سمك الإطار الملون */
-      background: #000;
-      border-radius: 48px;
-      z-index: -1;
+      content: ''; position: absolute; inset: 2px; background: #000; border-radius: 48px; z-index: -1;
     }
-
     .btn:active { transform: scale(0.95); }
     .btn i { font-size: 18px; position: relative; z-index: 2; }
 
-    /* === زر الموسيقى === */
+    /* === الأزرار الجانبية === */
     .music-btn {
       position: fixed; bottom: 20px; left: 20px;
       width: 45px; height: 45px; border-radius: 50%;
       background: var(--gold); border: none; font-size: 18px;
       display: flex; align-items: center; justify-content: center;
-      z-index: 100; cursor: pointer;
-      box-shadow: 0 0 10px var(--gold);
+      z-index: 100; cursor: pointer; box-shadow: 0 0 10px var(--gold);
     }
-</style>
+    .report-btn {
+      position: fixed; bottom: 20px; left: 80px;
+      width: 45px; height: 45px; border-radius: 50%;
+      background: transparent; border: 2px solid var(--gold); color: var(--gold); font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; cursor: pointer; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
 
+    /* === نافذة الإبلاغ === */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8); z-index: 10000; display: none;
+      justify-content: center; align-items: end; backdrop-filter: blur(5px);
+    }
+    .modal-box {
+      width: 100%; max-width: 500px; background: #111;
+      border-top: 2px solid var(--gold); border-radius: 20px 20px 0 0;
+      padding: 25px; animation: slideUp 0.4s ease; color: #fff; text-align: right;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--gold); }
+    .report-option {
+      padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      border: 1px solid transparent; transition: 0.2s;
+    }
+    .report-option.selected { border-color: var(--gold); background: rgba(255, 215, 0, 0.1); }
+    .modal-actions { margin-top: 20px; display: flex; gap: 10px; }
+    .action-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+    .btn-send { background: var(--gold); color: #000; }
+    .btn-cancel { background: #333; color: #fff; }
+    @media (min-width: 600px) { .modal-overlay { align-items: center; } .modal-box { border-radius: 20px; } }
   </style>
 </head>
 <body>
 
-  <!-- الهيدر العلوي الثابت -->
+  <!-- شبكة الذهب التفاعلية -->
+  <canvas id="gold-particles"></canvas>
+
+  <!-- الهيدر العلوي -->
   <div class="top-header">S T O R E • K I N G</div>
 
-  <!-- شاشة التحميل (الكتابة التلقائية) -->
+  <!-- شاشة التحميل -->
   <div id="intro-screen">
       <div class="intro-text" id="typing-area"></div>
   </div>
 
-  <!-- الفيديو الخلفية -->
+  <!-- الخلفية -->
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
   </video>
-  
   <div class="overlay"></div>
 
   <!-- الأصوات -->
   <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
   <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <!-- زر التحكم بالموسيقى -->
-  <button class="music-btn" onclick="toggleMusic()">
-    <i class="fa-solid fa-music"></i>
-  </button>
+  <!-- أزرار التحكم السفلية -->
+  <button class="music-btn" onclick="toggleMusic()"><i class="fa-solid fa-music"></i></button>
+  <button class="report-btn" onclick="toggleReportModal()"><i class="fa-solid fa-triangle-exclamation"></i></button>
 
   <!-- البطاقة -->
   <div class="card-container" id="mainCard">
     
-    <!-- === الوجه الأمامي (يظهر أولاً) === -->
+    <!-- === الوجه الأمامي (1) === -->
     <div class="face front">
       <div class="logo"></div>
       <h1>I NZR | كنج</h1>
-      <h2>أهلًا بكم في موقعنا الخاص، حيث نقدم خدمات التواصل الاجتماعي. حيث نقدم لكم اقوي العروض الذي نقدمه في قناتنا الخاصه للاستفسار يرجع التواصل مع المطور</h2>
+      <h2>KING</h2>
       
-      <!-- زر التصفح (يقلب البطاقة) -->
+      <!-- زر التدوير -->
       <button class="btn" type="button" onclick="flipCard()">
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- زر المالك (رابط مباشر) -->
+      <!-- زر المالك 1 -->
       <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
-        <i class="fa-brands fa-telegram"></i> تواصل (تيلجرام)
+        <i class="fa-brands fa-telegram"></i> تواصل (المالك 1)
+      </a>
+
+      <!-- زر المالك 2 (ضع الرابط هنا) -->
+      <a href="https://t.me/O_I_I4" class="btn" target="_blank" onclick="playSound()">
+        <i class="fa-brands fa-telegram"></i> تواصل (المالك 2)
       </a>
     </div>
 
-    <!-- === الوجه الخلفي (القائمة) === -->
+    <!-- === الوجه الخلفي (2) === -->
     <div class="face back">
       <div class="logo" style="width: 70px; height: 70px; margin-bottom: 10px;"></div>
       <h2 style="margin-bottom: 15px;">الروابط الرسمية</h2>
       
-      <!-- القناة -->
       <a href="https://t.me/T_V9RN" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-bullhorn"></i> القناة الرسمية
       </a>
-
-      <!-- القروب -->
       <a href="https://t.me/ZEX9X" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-users"></i> قروب المناقشة
       </a>
-
-      <!-- البوت -->
       <a href="https://t.me/NFJEKJEJEJBOT" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
 
-      <!-- زر الرجوع (زر فقط وليس رابط) -->
+      <!-- زر الرجوع (أمر فقط) -->
       <button class="btn" type="button" style="background: transparent; border: none; margin-top: 5px;" onclick="flipCard()">
         <i class="fa-solid fa-rotate-left"></i> رجوع
       </button>
@@ -282,77 +252,111 @@
 
   </div>
 
+  <!-- نافذة الإبلاغ -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal-box">
+      <div class="modal-header">الإبلاغ عن إساءة الاستخدام</div>
+      <p style="font-size: 14px; color: #ccc; margin-bottom: 15px;">ما الذي تريد أن تبلغ عنه؟</p>
+      <div class="report-option" onclick="selectOption(this)"><i class="fa-solid fa-chevron-left"></i> محتوى غير مرغوب فيه</div>
+      <div class="report-option" onclick="selectOption(this)"><i class="fa-solid fa-chevron-left"></i> محتوى جنسي فاضح</div>
+      <div class="report-option" onclick="selectOption(this)"><i class="fa-solid fa-chevron-left"></i> محتوى عنيف أو خطير</div>
+      <div class="report-option" onclick="selectOption(this)"><i class="fa-solid fa-chevron-left"></i> تحرش أو تسلط</div>
+      <div class="modal-actions">
+        <button class="action-btn btn-send" onclick="submitReport()">إرسال البلاغ</button>
+        <button class="action-btn btn-cancel" onclick="toggleReportModal()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // === 1. تعريف العناصر الأساسية ===
     const card = document.getElementById('mainCard');
     const music = document.getElementById('bgMusic');
     const clickFx = document.getElementById('clickSound');
-    
-    // عناصر شاشة المقدمة (الكتابة)
-    const typeArea = document.getElementById('typing-area');
-    const introScreen = document.getElementById('intro-screen');
-    
+    const reportModal = document.getElementById('reportModal');
     let musicStarted = false;
+    let selectedReason = null;
 
-    // === 2. نص الكتابة التلقائية ===
-    const textToType = `مرحبًا بكم في موقعنا الرسمي.
+    // === إعدادات الكانفاس (ذرات الذهب) ===
+    const canvas = document.getElementById('gold-particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let particlesArray = [];
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
+            this.color = '#ffd700';
+        }
+        update() {
+            this.x += this.speedX; this.y += this.speedY;
+            if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+            if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+        }
+        draw() {
+            ctx.fillStyle = this.color; ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+    function initParticles() {
+        particlesArray = [];
+        for (let i = 0; i < (window.innerWidth < 600 ? 50 : 100); i++) particlesArray.push(new Particle());
+    }
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update(); particlesArray[i].draw();
+            for (let j = i; j < particlesArray.length; j++) {
+                const dx = particlesArray[i].x - particlesArray[j].x;
+                const dy = particlesArray[i].y - particlesArray[j].y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 100) {
+                    ctx.beginPath(); ctx.strokeStyle = `rgba(255, 215, 0, ${1 - dist/100})`;
+                    ctx.lineWidth = 0.5; ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                    ctx.lineTo(particlesArray[j].x, particlesArray[j].y); ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+
+    // === الوظائف العامة ===
+    function playSound() {
+      if(clickFx) { clickFx.currentTime = 0; clickFx.play(); }
+      if (!musicStarted) { music.play().then(() => { musicStarted = true; }).catch(()=>{}); }
+    }
+    
+    function typeWriter() {
+      const typeArea = document.getElementById('typing-area');
+      const introScreen = document.getElementById('intro-screen');
+      const text = `مرحبًا بكم في موقعنا الرسمي.
 نرجو منكم الانتظار قليلًا حتى يكتمل التحميل،
 حيث ستظهر لكم الصفحة الرسمية للمتجر.
 شكرًا لزيارتكم، ونتمنى لكم تجربة مميزة.`;
-
-    let i = 0;
-    const speed = 40; // سرعة الكتابة (كلما قل الرقم زادت السرعة)
-
-    // === 3. دالة الصوت (تكة + موسيقى) ===
-    function playSound() {
-      // تشغيل صوت التكة عند الضغط
-      if(clickFx) {
-        clickFx.currentTime = 0;
-        clickFx.play();
+      let i = 0;
+      function typing() {
+        if (i < text.length) { typeArea.innerHTML += text.charAt(i); i++; setTimeout(typing, 40); }
+        else { setTimeout(() => { if(introScreen) introScreen.classList.add('fade-out'); playSound(); }, 1500); }
       }
-      // محاولة تشغيل الموسيقى الخلفية إذا لم تعمل بعد
-      if (!musicStarted) {
-        music.play().then(() => { musicStarted = true; }).catch((e) => {});
-      }
+      if(typeArea) typing();
     }
 
-    // === 4. دالة الكتابة التلقائية (بديلة للعداد) ===
-    function typeWriter() {
-      // حماية: إذا لم يجد عنصر الكتابة لا يفعل شيئاً (يمنع الأخطاء)
-      if (!typeArea) return; 
+    function flipCard() { playSound(); card.classList.toggle('flipped'); }
+    function toggleMusic() { if (music.paused) { music.play(); musicStarted = true; } else { music.pause(); } }
 
-      if (i < textToType.length) {
-        typeArea.innerHTML += textToType.charAt(i);
-        i++;
-        setTimeout(typeWriter, speed);
-      } else {
-        // انتهت الكتابة: انتظر 1.5 ثانية ثم اخفِ الشاشة
-        setTimeout(() => {
-          if(introScreen) introScreen.classList.add('fade-out');
-          playSound(); // تشغيل الصوت عند ظهور الموقع
-        }, 1500);
-      }
-    }
+    // === وظائف الإبلاغ ===
+    function toggleReportModal() { playSound(); reportModal.style.display = (reportModal.style.display === 'flex') ? 'none' : 'flex'; }
+    function selectOption(el) { playSound(); document.querySelectorAll('.report-option').forEach(e => e.classList.remove('selected')); el.classList.add('selected'); selectedReason = el.innerText; }
+    function submitReport() { playSound(); if(!selectedReason) return alert('الرجاء الاختيار'); reportModal.style.display = 'none'; setTimeout(() => alert('تم استلام البلاغ.'), 300); }
+    reportModal.addEventListener('click', (e) => { if (e.target === reportModal) toggleReportModal(); });
 
-    // === 5. دوال البطاقة والموقع ===
-    function flipCard() {
-      playSound(); 
-      card.classList.toggle('flipped'); 
-    }
-
-    // زر تشغيل/إيقاف الموسيقى
-    function toggleMusic() {
-      if (music.paused) {
-        music.play();
-        musicStarted = true;
-      } else {
-        music.pause();
-      }
-    }
-
-    // === 6. بدء التشغيل عند اكتمال تحميل الصفحة ===
-    window.addEventListener('load', typeWriter);
+    // === التشغيل ===
+    window.addEventListener('load', () => {
+        typeWriter();
+        initParticles();
+        animateParticles();
+    });
   </script>
-
 </body>
 </html>
