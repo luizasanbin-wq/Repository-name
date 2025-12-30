@@ -4,15 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google" content="notranslate">
-  <title> متجر القياده | KING</title>
+  <title>Store KING | الصفحة الرسمية</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- خطوط احترافية -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Russo+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
       --gold: #ffd700;
-      --glass-bg: rgba(0, 0, 0, 0.60); /* تخفيف الشفافية للسرعة */
+      --neon-green: #00ff41; /* لون أخضر نيون مثل الصورة */
+      --dark-green: #006400;
+      --glass-bg: rgba(0, 0, 0, 0.70);
       --glass-border: rgba(255, 215, 0, 0.3);
     }
 
@@ -29,124 +32,222 @@
       perspective: 1000px;
     }
 
-    /* فيديو الخلفية - يظهر فوراً */
+    /* فيديو الخلفية */
     #video-bg {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: -10;
-      background: #000; /* لون احتياطي حتى يشتغل الفيديو */
+      transition: filter 1.5s ease; filter: blur(15px);
     }
 
-    /* تعتيم خفيف جداً للقراءة */
     .overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.3); z-index: -9;
+      background: rgba(0, 0, 0, 0.5); z-index: -9;
     }
 
-    /* حاوية البطاقة - إصلاح السرعة */
+    /* === الاسم الفخم في الأعلى (يمين) === */
+    .top-brand {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      z-index: 500;
+      font-family: 'Russo One', sans-serif; /* خط عريض انجليزي */
+      font-size: 22px;
+      text-transform: uppercase;
+      /* ستايل الأخضر المشع 3D */
+      color: #fff;
+      text-shadow: 
+        0 0 5px var(--neon-green),
+        0 0 10px var(--neon-green),
+        0 4px 4px rgba(0,0,0,0.8);
+      -webkit-text-stroke: 1px var(--dark-green);
+      
+      /* حركة الكتابة */
+      overflow: hidden;
+      white-space: nowrap;
+      border-left: 3px solid var(--neon-green); /* مؤشر الكتابة */
+      width: 0;
+      animation: typing 2s steps(20, end) forwards, blink 0.75s step-end infinite;
+      animation-delay: 3.5s; /* يبدأ بعد شاشة التحميل */
+      opacity: 0; /* مخفي في البداية */
+    }
+    
+    /* عند انتهاء التحميل يظهر */
+    .brand-visible { opacity: 1 !important; }
+
+    @keyframes typing { from { width: 0; } to { width: 140px; } }
+    @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--neon-green); } }
+
+
+    /* === شاشة التحميل === */
+    #loading-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 9999; display: flex; justify-content: center; align-items: center;
+      flex-direction: column; background: rgba(0,0,0,0.6);
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .neon-ring {
+      position: relative; width: 120px; height: 120px; border-radius: 50%;
+      border: 4px solid transparent; border-top-color: var(--neon-green); border-right-color: #00b8ff;
+      box-shadow: 0 0 20px var(--neon-green); animation: spinRing 0.8s linear infinite;
+    }
+    .loading-text { position: absolute; color: #fff; font-size: 20px; font-weight: bold; font-family: sans-serif; }
+    @keyframes spinRing { 100% {transform: rotate(360deg);} }
+
+    /* === البطاقة === */
     .card-container {
       width: 90%; max-width: 400px; height: 600px;
-      position: relative; 
-      transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* تسريع الحركة */
-      will-change: transform; /* أمر للجوال باستخدام المعالج القوي */
+      position: relative; transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      opacity: 0; transform: translateY(100px);
     }
+    .show-card { animation: popUp 1s forwards; }
+    .card-container.flipped { transform: rotateY(180deg); }
+    @keyframes popUp { to { opacity: 1; transform: translateY(0); } }
 
-    .card-container.flipped {
-      transform: rotateY(180deg);
-    }
-
-    /* وجه البطاقة */
     .face {
       position: absolute; width: 100%; height: 100%;
-      backface-visibility: hidden; /* ضروري لإخفاء الظهر */
-      -webkit-backface-visibility: hidden; /* للآيفون */
-      border-radius: 30px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: 30px; background: var(--glass-bg); border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
+    .face.back { transform: rotateY(180deg); }
 
-    /* الوجه الخلفي */
-    .face.back {
-      transform: rotateY(180deg);
-    }
-
-    /* اللوجو */
     .logo {
       width: 120px; height: 120px; border-radius: 50%;
       background: url('logo.png') center/cover;
-      border: 3px solid var(--gold);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      border: 3px solid var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
       margin-bottom: 20px;
     }
 
     h1 { font-size: 24px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 5px #000; }
     h2 { font-size: 14px; color: var(--gold); margin-bottom: 30px; letter-spacing: 1px; }
 
-    /* الأزرار - خفيفة وسريعة */
     .btn {
       width: 100%; padding: 15px; margin: 8px 0; border-radius: 50px;
-      background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 215, 0, 0.3);
+      background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 215, 0, 0.3);
       color: #fff; font-size: 16px; text-decoration: none; font-weight: bold;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       cursor: pointer; transition: 0.2s;
     }
-    
     .btn:active { transform: scale(0.95); background: var(--gold); color: #000; }
-    .btn i { font-size: 18px; }
 
-    /* زر الموسيقى العائم */
+    /* === الأزرار العائمة (تحت) === */
+    
+    /* زر الموسيقى (يسار) */
     .music-btn {
-      position: fixed; bottom: 20px; left: 20px;
+      position: fixed; bottom: 25px; left: 25px;
       width: 45px; height: 45px; border-radius: 50%;
-      background: var(--gold); border: none; font-size: 18px;
+      background: var(--gold); border: none; font-size: 18px; color: #000;
       display: flex; align-items: center; justify-content: center;
-      z-index: 100; cursor: pointer;
-      box-shadow: 0 0 10px var(--gold);
+      z-index: 100; cursor: pointer; box-shadow: 0 0 15px var(--gold);
+      opacity: 0; transition: opacity 1s;
+    }
+
+    /* زر البلاغات والسياسة (يمين) - جديد */
+    .policy-btn {
+      position: fixed; bottom: 25px; right: 25px;
+      width: 45px; height: 45px; border-radius: 50%;
+      background: #333; border: 2px solid #fff; font-size: 18px; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; cursor: pointer; box-shadow: 0 0 10px rgba(255,255,255,0.3);
+      opacity: 0; transition: opacity 1s;
+    }
+    .policy-btn:active { transform: scale(0.9); }
+
+    /* === نافذة البلاغات المنبثقة === */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8); z-index: 2000;
+      display: none; justify-content: center; align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    .modal-box {
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid var(--gold);
+      border-radius: 20px; padding: 25px; width: 85%; max-width: 320px;
+      text-align: center; position: relative;
+      animation: popUp 0.3s ease;
+    }
+    .modal-title { color: var(--gold); font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .modal-item {
+      display: block; width: 100%; padding: 12px; margin-bottom: 10px;
+      background: #333; color: #fff; border-radius: 10px; text-decoration: none;
+      font-size: 14px; transition: 0.2s;
+    }
+    .modal-item:hover { background: #444; }
+    .close-modal {
+      margin-top: 10px; background: transparent; color: #888; border: none; cursor: pointer; font-size: 14px;
     }
 
   </style>
 </head>
 <body>
 
-  <!-- الفيديو يظهر فوراً (بدون شاشة سوداء) -->
+  <!-- الاسم في الأعلى يمين -->
+  <div class="top-brand" id="brandText">Store KING</div>
+
   <video id="video-bg" autoplay loop muted playsinline>
     <source src="bg.mp4" type="video/mp4">
   </video>
   
   <div class="overlay"></div>
 
+  <!-- التحميل -->
+  <div id="loading-screen">
+    <div class="neon-ring"></div>
+    <div class="loading-text" id="counter">0%</div>
+  </div>
+
   <!-- الأصوات -->
+  <audio id="introMusic"> <source src="intro.mp3" type="audio/mpeg"> </audio>
   <audio id="bgMusic" loop> <source src="music.mp3" type="audio/mpeg"> </audio>
   <audio id="clickSound"> <source src="click.mp3" type="audio/mpeg"> </audio>
 
-  <!-- زر التحكم بالموسيقى -->
-  <button class="music-btn" onclick="toggleMusic()">
+  <!-- زر الموسيقى (يسار) -->
+  <button class="music-btn" id="mainMusicBtn" onclick="toggleMusic()">
     <i class="fa-solid fa-music"></i>
   </button>
+
+  <!-- زر البلاغات (يمين) -->
+  <button class="policy-btn" id="policyBtn" onclick="toggleModal()">
+    <i class="fa-solid fa-shield-halved"></i>
+  </button>
+
+  <!-- نافذة البلاغات -->
+  <div class="modal-overlay" id="policyModal">
+    <div class="modal-box">
+      <div class="modal-title">مركز المساعدة</div>
+      <!-- رابط الإبلاغ (استبدل USERNAME بحسابك لاستقبال البلاغات) -->
+      <a href="https://t.me/O_I_I3" class="modal-item" target="_blank">
+        <i class="fa-solid fa-triangle-exclamation"></i> إبلاغ عن مشكلة
+      </a>
+      <a href="#" class="modal-item" onclick="alert('جميع الحقوق محفوظة لـ Store KING \nسياسة الخصوصية: بياناتك آمنة.')">
+        <i class="fa-solid fa-file-contract"></i> سياسة الخصوصية
+      </a>
+      <button class="close-modal" onclick="toggleModal()">إغلاق</button>
+    </div>
+  </div>
 
   <!-- البطاقة -->
   <div class="card-container" id="mainCard">
     
-    <!-- === الوجه الأمامي (1) === -->
+    <!-- الوجه الأمامي -->
     <div class="face front">
       <div class="logo"></div>
       <h1>I NZR | كنج</h1>
-      <h2>KING</h2>
+      <h2>Store KING</h2>
       
-      <!-- زر التدوير -->
       <button class="btn" onclick="flipCard()">
         <i class="fa-solid fa-wand-magic-sparkles"></i> تصفح معلوماتنا
       </button>
       
-      <!-- زر التليجرام الخاص -->
+      <!-- تأكد من صحة الرابط هنا -->
       <a href="https://t.me/O_I_I3" class="btn" target="_blank" onclick="playSound()">
         <i class="fa-brands fa-telegram"></i> تواصل تليجرام
       </a>
-    </div> <!-- تم إغلاق الوجه الأول هنا بشكل صحيح -->
+    </div>
 
-    <!-- === الوجه الخلفي (2) === -->
+    <!-- الوجه الخلفي -->
     <div class="face back">
       <div class="logo" style="width: 70px; height: 70px; margin-bottom: 15px;"></div>
       <h2 style="margin-bottom: 20px;">الروابط الرسمية</h2>
@@ -164,46 +265,86 @@
         <i class="fa-solid fa-robot"></i> بوت الاشتراك
       </a>
 
-      <!-- زر الرجوع -->
       <button class="btn" style="background: transparent; border: none; margin-top: 10px;" onclick="flipCard()">
         <i class="fa-solid fa-rotate-left"></i> رجوع
       </button>
-    </div> <!-- تم إغلاق الوجه الثاني هنا -->
+    </div>
 
   </div>
 
   <script>
+    const loader = document.getElementById('loading-screen');
+    const counterText = document.getElementById('counter');
+    const video = document.getElementById('video-bg');
+    const mainCard = document.getElementById('mainCard');
+    const introAudio = document.getElementById('introMusic');
+    const musicBtn = document.getElementById('mainMusicBtn');
+    const policyBtn = document.getElementById('policyBtn');
+    const brandText = document.getElementById('brandText');
+
+    // === التحميل ===
+    window.onload = function() {
+      introAudio.volume = 0.5; 
+      introAudio.play().catch(e => {});
+
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        counterText.innerText = count + "%";
+        if (count === 100) {
+          clearInterval(interval);
+          finishLoading();
+        }
+      }, 30);
+    };
+
+    function finishLoading() {
+      loader.style.opacity = '0';
+      loader.style.visibility = 'hidden';
+      video.style.filter = "blur(0px)";
+      introAudio.pause();
+      
+      mainCard.classList.add('show-card');
+      musicBtn.style.opacity = '1';
+      policyBtn.style.opacity = '1';
+      brandText.classList.add('brand-visible'); // تشغيل اسم الموقع
+    }
+
+    // === المنطق الأساسي ===
     const card = document.getElementById('mainCard');
     const music = document.getElementById('bgMusic');
     const clickFx = document.getElementById('clickSound');
+    const modal = document.getElementById('policyModal');
     let musicStarted = false;
 
-    // دالة الصوت البسيطة والسريعة
     function playSound() {
-      // 1. تشغيل صوت التكة
-      if(clickFx) {
-        clickFx.currentTime = 0;
-        clickFx.play();
-      }
-      // 2. محاولة تشغيل الموسيقى
+      if(clickFx) { clickFx.currentTime = 0; clickFx.play(); }
       if (!musicStarted) {
         music.play().then(() => { musicStarted = true; }).catch((e) => {});
       }
     }
 
-    // دالة التدوير
     function flipCard() {
-      playSound(); // شغل الصوت
-      card.classList.toggle('flipped'); // اقلب البطاقة
+      playSound();
+      card.classList.toggle('flipped');
     }
 
-    // زر الموسيقى الجانبي
     function toggleMusic() {
       if (music.paused) {
         music.play();
         musicStarted = true;
       } else {
         music.pause();
+      }
+    }
+
+    // فتح وإغلاق نافذة البلاغات
+    function toggleModal() {
+      playSound();
+      if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+      } else {
+        modal.style.display = 'flex';
       }
     }
   </script>
